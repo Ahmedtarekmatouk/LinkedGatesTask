@@ -1,0 +1,23 @@
+﻿@model List<Device>
+<h1>Device</h1>
+<a href="/Device/create">Add New</a>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>ID</th>
+        <th>DeviceName</th>
+        <th>AcquisitionDate</th>
+        <th>Memo</th>
+        <th>CategoryID</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ID</td>
+            <td>@item.DeviceName</td>
+            <td>@item.AcquisitionDate</td>
+            <td>@item.Memo</td>
+            <td>@item.CategoryID</td>
+            <td><a href="/Device/Edit/@item.ID">Edite</a></td>
+        </tr>
+    }
+</table>

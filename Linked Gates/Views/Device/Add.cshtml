@@ -1,0 +1,70 @@
+﻿@using Linked_Gates.ViewModel;
+@model DeviceViewModel
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<h1>Add</h1>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>DeviceName</label>
+        <input class="form form-control" id="DeviceName" value="@Model?.DeviceName" name="DeviceName" />
+    </div>
+    <div>
+        <label>Memo</label>
+        <input class="form form-control" id="Memo" value="@Model?.Memo" name="Memo" />
+    </div>
+    <div>
+        <label>AcquisitionDate</label>
+        <input type="date" class="form form-control" id="AcquisitionDate" value="@Model?.AcquisitionDate.ToString("yyyy-MM-dd")" name="AcquisitionDate" />
+    </div>
+    <br />
+
+    <div class="form-group">
+        <label for="CategoryID">Category</label>
+        <select id="CategoryID" name="CategoryID" class="form-control" onchange="loadProperties()">
+            <option value="">-- Select Category --</option>
+            @if (Model.Categories != null)
+            {
+                @foreach (var category in Model.Categories)
+                {
+                    <option value="@category.ID">@category.CategoryName</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="PropertyID">Property</label>
+        <select id="PropertyID" name="PropertyID" class="form-control">
+            <option value="">-- Select Property --</option>
+        </select>
+    </div>
+
+    <br />
+    <input type="submit" class="btn btn-success" value="Create" />
+</form>
+
+<script>
+    function loadProperties() {
+        var categoryId = document.getElementById('CategoryID').value;
+        var propertyDropdown = document.getElementById('PropertyID');
+        propertyDropdown.innerHTML = ''; 
+
+        if (categoryId) {
+            $.ajax({
+                url: '/Device/GetPropertiesByCategory',  
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function (result) {
+                    propertyDropdown.innerHTML += '<option value="">-- Select Property --</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        propertyDropdown.innerHTML += '<option value="' + result[i].id + '">' + result[i].propertyDescription + '</option>';
+                    }
+                },
+                error: function () {
+                    alert('Failed to retrieve properties.');
+                }
+            });
+        }
+    }
+</script>
